@@ -27,11 +27,30 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  List<Widget> _listItems = [
+    ListTile(
+        leading: Icon(Icons.folder),
+        title: Text('フォルダ1')
+    ),
+    ListTile(
+        leading: Icon(Icons.note),
+        title: Text('メモ1')
+    ),
+    ListTile(
+        leading: Icon(Icons.text_snippet),
+        title: Text('メモ2')
+    )
+  ];
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
+  void _addItemList(){
+    setState((){
+      _listItems.add(
+        ListTile(
+          leading: Icon(Icons.text_snippet),
+          title: Text("メモ${_listItems.length}")
+        )
+      );
+      print('AddListItem');
     });
   }
 
@@ -61,46 +80,32 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Container(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    'メモ',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold
-                    ),
-                  ),
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Container(
+              alignment: Alignment.topLeft,
+              child: Text(
+                'メモ',
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold
                 ),
               ),
-              ListView(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                children: <Widget>[
-                  ListTile(
-                    leading: Icon(Icons.folder),
-                    title: Text('フォルダ1')
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.note),
-                    title: Text('メモ1')
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.text_snippet),
-                    title: Text('メモ2')
-                  ),
-                ],
-              ),
-            ],
+            ),
+          ),
+          Flexible(
+            child: ListView.builder(
+              itemCount: _listItems.length,
+              itemBuilder: (BuildContext context, int index){
+                return _listItems[index];
+              },
+            ),
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: _addItemList,
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
