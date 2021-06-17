@@ -1,3 +1,5 @@
+import 'package:dokugaku/listItem.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -27,28 +29,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<Widget> _listItems = [
-    ListTile(
-        leading: Icon(Icons.folder),
-        title: Text('フォルダ1')
-    ),
-    ListTile(
-        leading: Icon(Icons.note),
-        title: Text('メモ1')
-    ),
-    ListTile(
-        leading: Icon(Icons.text_snippet),
-        title: Text('メモ2')
-    )
+  List<ListItem> _listItems = [
+    ListItem('フォルダ1', Icons.folder),
+    ListItem('メモ1', Icons.note),
+    ListItem('メモ2', Icons.text_snippet),
   ];
 
   void _addItemList(){
     setState((){
       _listItems.add(
-        ListTile(
-          leading: Icon(Icons.text_snippet),
-          title: Text("メモ${_listItems.length}")
-        )
+        ListItem("メモ${_listItems.length}", Icons.text_snippet)
       );
       print('AddListItem');
     });
@@ -98,7 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: ListView.builder(
               itemCount: _listItems.length,
               itemBuilder: (BuildContext context, int index){
-                return _listItems[index];
+                return _listItems[index].listTile;
               },
             ),
           ),
