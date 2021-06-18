@@ -35,11 +35,9 @@ class _MyHomePageState extends State<MyHomePage> {
     ListItem('メモ2', Icons.text_snippet),
   ];
 
-  void _addItemList(){
-    setState((){
-      _listItems.add(
-        ListItem("メモ${_listItems.length}", Icons.text_snippet)
-      );
+  void _addItemList() {
+    setState(() {
+      _listItems.add(ListItem("メモ${_listItems.length}", Icons.text_snippet));
       print('AddListItem');
     });
   }
@@ -55,15 +53,11 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             ListTile(
               title: Text('項目1'),
-              onTap: (){
-
-              },
+              onTap: () {},
             ),
             ListTile(
               title: Text('項目2'),
-              onTap: (){
-
-              },
+              onTap: () {},
             )
           ],
         ),
@@ -77,18 +71,15 @@ class _MyHomePageState extends State<MyHomePage> {
               alignment: Alignment.topLeft,
               child: Text(
                 'メモ',
-                style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold
-                ),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
             ),
           ),
           Flexible(
             child: ListView.builder(
               itemCount: _listItems.length,
-              itemBuilder: (BuildContext context, int index){
-                return _listItems[index].listTile;
+              itemBuilder: (BuildContext context, int index) {
+                return _listItems[index].build(context);
               },
             ),
           ),
