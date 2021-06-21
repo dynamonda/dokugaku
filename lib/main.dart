@@ -37,8 +37,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _addItemList() {
     setState(() {
-      _listItems.add(ListItem("メモ${_listItems.length}", Icons.text_snippet));
+      _listItems.add(ListItem(
+          "メモ${_listItems.length}", Icons.text_snippet));
       print('AddListItem');
+    });
+  }
+
+  void _removeItemList(ListItem item) {
+    setState(() {
+      _listItems.remove(item);
     });
   }
 
@@ -79,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: ListView.builder(
               itemCount: _listItems.length,
               itemBuilder: (BuildContext context, int index) {
-                return _listItems[index].build(context);
+                return _listItems[index].build(context, _listItems, index);
               },
             ),
           ),
