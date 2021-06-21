@@ -37,8 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _addItemList() {
     setState(() {
-      _listItems.add(ListItem(
-          "メモ${_listItems.length}", Icons.text_snippet));
+      _listItems.add(ListItem("メモ${_listItems.length}", Icons.text_snippet));
       print('AddListItem');
     });
   }
@@ -92,10 +91,22 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addItemList,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
+      floatingActionButton: Row(
+        children: [
+          FloatingActionButton(
+            onPressed: _addItemList,
+            tooltip: 'Increment',
+            child: Icon(Icons.add),
+          ),
+          FloatingActionButton(
+            onPressed: () {
+              setState(() {
+                _removeItemList(_listItems.last);
+              });
+            },
+            child: Icon(Icons.call),
+          )
+        ],
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
