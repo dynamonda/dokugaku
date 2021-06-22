@@ -53,6 +53,14 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: (){
+              _addItemList();
+            },
+          )
+        ],
       ),
       drawer: Drawer(
         child: ListView(
@@ -91,22 +99,13 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      floatingActionButton: Row(
-        children: [
-          FloatingActionButton(
-            onPressed: _addItemList,
-            tooltip: 'Increment',
-            child: Icon(Icons.add),
-          ),
-          FloatingActionButton(
-            onPressed: () {
-              setState(() {
-                _removeItemList(_listItems.last);
-              });
-            },
-            child: Icon(Icons.call),
-          )
-        ],
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            _removeItemList(_listItems.last);
+          });
+        },
+        child: Icon(Icons.call),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
