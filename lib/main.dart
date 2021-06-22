@@ -28,11 +28,59 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
+class AnimatedListItem {
+  String _name;
+  AnimatedListItem(this._name);
+}
+
+class AnimatedListItemWidget extends StatelessWidget {
+  final AnimatedListItem item;
+  final Animation<double> animation;
+  final VoidCallback onClicked;
+
+  // Todo: コンストラクタにconstってなんだ？
+  // Todo: コンストラクタに{}は何となく分かる
+  // Todo: requiredって何？
+  const AnimatedListItemWidget({
+    required this.item,
+    required this.animation,
+    required this.onClicked,
+    Key? key,
+  }) : super(key: key);
+
+  // ここでリストの見た目を作る
+  @override
+  Widget build(BuildContext context) {
+    return SizeTransition(
+      sizeFactor: animation,
+      child:
+        ListTile(
+        leading: Icon(Icons.text_snippet),
+        title: Text(item._name),
+        trailing: IconButton(
+          icon: Icon(Icons.check),
+          onPressed: () {
+            onClicked();
+          },
+        ),
+      ),
+    );
+  }
+}
+
 class _MyHomePageState extends State<MyHomePage> {
   List<ListItem> _listItems = [
     ListItem('フォルダ1', Icons.folder),
     ListItem('メモ1', Icons.note),
     ListItem('メモ2', Icons.text_snippet),
+  ];
+
+  // アニメーションリスト用
+  final key = GlobalKey<AnimatedListState>();
+  var _lists = [
+    AnimatedListItem("項目1"),
+    AnimatedListItem("項目2"),
+    AnimatedListItem("項目3"),
   ];
 
   void _addItemList() {
@@ -48,6 +96,22 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Widget buildAnimatedListItem(item, int index, Animation<double> animation) {
+    return AnimatedListItemWidget(
+        item: item,
+        animation: animation,
+        onClicked: () {
+          // 元のリストから削除
+          final item = _lists.removeAt(index);
+
+          // アニメーションリストから削除
+          key.currentState!.removeItem(index, (context, animation) {
+            return buildAnimatedListItem(item, index, animation);
+          });
+        }
+        );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,8 +120,12 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: [
           IconButton(
             icon: Icon(Icons.add),
-            onPressed: (){
-              _addItemList();
+            onPressed: () {
+              //_addItemList();
+              var index = _lists.length;
+
+              _lists.insert(index, AnimatedListItem("項目${_lists.length + 1}"));
+              key.currentState!.insertItem(index);
             },
           )
         ],
@@ -90,13 +158,16 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           Flexible(
-            child: ListView.builder(
-              itemCount: _listItems.length,
-              itemBuilder: (BuildContext context, int index) {
-                return _listItems[index].build(context, _listItems, index);
+            child: AnimatedList(
+              key: key,
+              initialItemCount: _lists.length,
+              itemBuilder: (context, index, animation) {
+                var item = _lists[index];
+                return buildAnimatedListItem(item, index, animation);
               },
             ),
           ),
+          //),
         ],
       ),
       floatingActionButton: FloatingActionButton(
