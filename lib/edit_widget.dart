@@ -22,7 +22,7 @@ class EditWidget extends StatelessWidget {
           child: Column(
         children: [
           Container(
-            color: Colors.amber,
+            //color: Colors.amber,
             width: double.infinity,
             padding: EdgeInsets.all(10.0),
             child: Text(_title,
@@ -31,7 +31,17 @@ class EditWidget extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 )),
           ),
-          Container(color: Colors.teal),
+          Expanded(
+            child: Container(
+              //color: Colors.teal,
+              width: double.infinity,
+              padding: EdgeInsets.all(14.0),
+              child: TextField(
+                enabled: true,
+                maxLines: null,
+              ),
+            ),
+          ),
         ],
       )),
     );
