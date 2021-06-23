@@ -2,6 +2,8 @@ import 'package:dokugaku/listItem.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:uuid/uuid.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -37,16 +39,17 @@ class AnimatedListItemWidget extends StatelessWidget {
   final AnimatedListItem item;
   final Animation<double> animation;
   final VoidCallback onClicked;
+  late final String uuid;
 
-  // Todo: コンストラクタにconstってなんだ？
-  // Todo: コンストラクタに{}は何となく分かる
-  // Todo: requiredって何？
-  const AnimatedListItemWidget({
+  AnimatedListItemWidget({
     required this.item,
     required this.animation,
     required this.onClicked,
     Key? key,
-  }) : super(key: key);
+  }) : super(key: key){
+    var uuid = new Uuid();
+    this.uuid = uuid.v4();
+  }
 
   // ここでリストの見た目を作る
   @override
@@ -63,6 +66,9 @@ class AnimatedListItemWidget extends StatelessWidget {
             onClicked();
           },
         ),
+        onTap: (){
+          print("uuid:$uuid");
+        },
       ),
     );
   }
@@ -144,31 +150,33 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Container(
-              alignment: Alignment.topLeft,
-              child: Text(
-                'メモ',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Container(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  'メモ',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
-          ),
-          Flexible(
-            child: AnimatedList(
-              key: key,
-              initialItemCount: _lists.length,
-              itemBuilder: (context, index, animation) {
-                var item = _lists[index];
-                return buildAnimatedListItem(item, index, animation);
-              },
+            Flexible(
+              child: AnimatedList(
+                key: key,
+                initialItemCount: _lists.length,
+                itemBuilder: (context, index, animation) {
+                  var item = _lists[index];
+                  return buildAnimatedListItem(item, index, animation);
+                },
+              ),
             ),
-          ),
-          //),
-        ],
+            //),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
