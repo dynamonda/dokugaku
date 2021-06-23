@@ -61,7 +61,7 @@ class AnimatedListItemWidget extends StatelessWidget {
         leading: Icon(Icons.text_snippet),
         title: Text(item._name),
         trailing: IconButton(
-          icon: Icon(Icons.check),
+          icon: Icon(Icons.delete),
           onPressed: () {
             onClicked();
           },
