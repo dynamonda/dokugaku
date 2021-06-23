@@ -1,3 +1,4 @@
+import 'package:dokugaku/edit_widget.dart';
 import 'package:dokugaku/listItem.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -39,25 +40,22 @@ class AnimatedListItemWidget extends StatelessWidget {
   final AnimatedListItem item;
   final Animation<double> animation;
   final VoidCallback onClicked;
-  late final String uuid;
+  final String uuid;
 
-  AnimatedListItemWidget({
+  const AnimatedListItemWidget({
     required this.item,
     required this.animation,
     required this.onClicked,
+    required this.uuid,
     Key? key,
-  }) : super(key: key){
-    var uuid = new Uuid();
-    this.uuid = uuid.v4();
-  }
+  }) : super(key: key);
 
   // ここでリストの見た目を作る
   @override
   Widget build(BuildContext context) {
     return SizeTransition(
       sizeFactor: animation,
-      child:
-        ListTile(
+      child: ListTile(
         leading: Icon(Icons.text_snippet),
         title: Text(item._name),
         trailing: IconButton(
@@ -66,8 +64,12 @@ class AnimatedListItemWidget extends StatelessWidget {
             onClicked();
           },
         ),
-        onTap: (){
-          print("uuid:$uuid");
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      EditWidget(this.uuid, this.item._name)));
         },
       ),
     );
@@ -103,19 +105,24 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget buildAnimatedListItem(item, int index, Animation<double> animation) {
-    return AnimatedListItemWidget(
-        item: item,
-        animation: animation,
-        onClicked: () {
-          // 元のリストから削除
-          final item = _lists.removeAt(index);
+    // uuidを求める
+    var uuidObj = new Uuid();
+    var uuid = uuidObj.v4();
 
-          // アニメーションリストから削除
-          key.currentState!.removeItem(index, (context, animation) {
-            return buildAnimatedListItem(item, index, animation);
-          });
-        }
-        );
+    return AnimatedListItemWidget(
+      item: item,
+      animation: animation,
+      onClicked: () {
+        // 元のリストから削除
+        final item = _lists.removeAt(index);
+
+        // アニメーションリストから削除
+        key.currentState!.removeItem(index, (context, animation) {
+          return buildAnimatedListItem(item, index, animation);
+        });
+      },
+      uuid: uuid,
+    );
   }
 
   @override
