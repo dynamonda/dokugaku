@@ -22,40 +22,50 @@ class EditWidget extends StatelessWidget {
       body: SafeArea(
           child: Column(
         children: [
-          Container(
-            //color: Colors.amber,
+          _TitleText(_item),
+          _TextArea(),
+        ],
+      )),
+    );
+  }
+}
+
+// タイトル
+class _TitleText extends Container {
+  _TitleText(AnimatedListItem item)
+      : super(
             width: double.infinity,
             padding: EdgeInsets.all(10.0),
             child: TextField(
               maxLines: 1,
               minLines: 1,
-              controller: TextEditingController(text: _item.name),
+              controller: TextEditingController(text: item.name),
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
               decoration: InputDecoration(border: InputBorder.none),
               onChanged: (text) {
-                _item.name = text;
+                item.name = text;
               },
+            ));
+}
+
+// テキストエリア
+class _TextArea extends Expanded {
+  _TextArea()
+      : super(
+          child: Container(
+            //color: Colors.teal,
+            width: double.infinity,
+            padding: EdgeInsets.all(14.0),
+            child: TextField(
+              enabled: true,
+              maxLines: null,
+              decoration: new InputDecoration(
+                  // 色々変更
+                  ),
             ),
           ),
-          Expanded(
-            child: Container(
-              //color: Colors.teal,
-              width: double.infinity,
-              padding: EdgeInsets.all(14.0),
-              child: TextField(
-                enabled: true,
-                maxLines: null,
-                decoration: new InputDecoration(
-                    // 色々変更
-                    ),
-              ),
-            ),
-          ),
-        ],
-      )),
-    );
-  }
+        );
 }
