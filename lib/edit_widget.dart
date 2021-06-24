@@ -1,11 +1,12 @@
+import 'package:dokugaku/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class EditWidget extends StatelessWidget {
   final String _uuid;
-  final String _title;
+  final AnimatedListItem _item;
 
-  EditWidget(this._uuid, this._title);
+  EditWidget(this._uuid, this._item);
 
   @override
   Widget build(BuildContext context) {
@@ -28,12 +29,15 @@ class EditWidget extends StatelessWidget {
             child: TextField(
               maxLines: 1,
               minLines: 1,
-              controller: TextEditingController(text: _title),
+              controller: TextEditingController(text: _item.name),
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
               decoration: InputDecoration(border: InputBorder.none),
+              onChanged: (text) {
+                _item.name = text;
+              },
             ),
           ),
           Expanded(

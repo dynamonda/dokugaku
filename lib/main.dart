@@ -32,8 +32,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class AnimatedListItem {
-  String _name;
-  AnimatedListItem(this._name);
+  String name;
+  AnimatedListItem(this.name);
 }
 
 class AnimatedListItemWidget extends StatelessWidget {
@@ -57,19 +57,18 @@ class AnimatedListItemWidget extends StatelessWidget {
       sizeFactor: animation,
       child: ListTile(
         leading: Icon(Icons.text_snippet),
-        title: Text(item._name),
+        title: Text(item.name),
         trailing: IconButton(
           icon: Icon(Icons.delete),
           onPressed: () {
             onClicked();
           },
         ),
-        onTap: () {
-          Navigator.push(
+        onTap: () async {
+          final result = await Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      EditWidget(this.uuid, this.item._name)));
+                  builder: (context) => EditWidget(this.uuid, item)));
         },
       ),
     );
