@@ -25,11 +25,16 @@ class EditWidget extends StatelessWidget {
             //color: Colors.amber,
             width: double.infinity,
             padding: EdgeInsets.all(10.0),
-            child: Text(_title,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                )),
+            child: TextField(
+              maxLines: 1,
+              minLines: 1,
+              controller: TextEditingController(text: _title),
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+              decoration: InputDecoration(border: InputBorder.none),
+            ),
           ),
           Expanded(
             child: Container(
@@ -39,6 +44,9 @@ class EditWidget extends StatelessWidget {
               child: TextField(
                 enabled: true,
                 maxLines: null,
+                decoration: new InputDecoration(
+                    // 色々変更
+                    ),
               ),
             ),
           ),
