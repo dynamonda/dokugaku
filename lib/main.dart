@@ -40,9 +40,9 @@ class AnimatedListItem {
 }
 
 class MemoModel {
-  final String uuid;
-  final String title;
-  final String text;
+  late String uuid;
+  late String title;
+  late String text;
 
   MemoModel({required this.uuid, required this.title, required this.text});
 
@@ -56,6 +56,16 @@ class MemoModel {
       'text': text
     };
     return map;
+  }
+
+  MemoModel.fromMap(Map<String, Object?> map){
+    uuid = map['id'].toString();
+    title = map['title'].toString();
+    text = map['text'].toString();
+  }
+
+  String toString(){
+    return "MemoModel, id=$uuid, title=$title, text=$text";
   }
 }
 
@@ -170,7 +180,25 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
             ),
-            //),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: FutureBuilder(
+                future: DatabaseHelper.instance.getMemos(),
+                builder: (BuildContext context, AsyncSnapshot<List<MemoModel>> snapshot){
+                  if(snapshot.hasData){
+                    if(snapshot.data == null) {
+                      return Text('0件です');
+                    }
+                    else{
+                      return Text(snapshot.data!.length.toString());
+                    }
+                  }
+                  else{
+                    return Text('ここに表示');
+                  }
+                },
+              ),
+            )
           ],
         ),
       ),

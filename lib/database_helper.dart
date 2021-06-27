@@ -79,4 +79,17 @@ class DatabaseHelper {
     var count = Sqflite.firstIntValue(result);
     return count!;
   }
+
+  Future<List<MemoModel>> getMemos() async{
+    var db = await instance.database;
+    List<Map<String, Object?>> result = await db.query('memos');
+
+    List<MemoModel> list = [];
+    result.forEach((row) {
+      list.add(MemoModel.fromMap(row));
+      print(row.toString());
+    });
+
+    return list;
+  }
 }
