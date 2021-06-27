@@ -46,7 +46,7 @@ class MemoModel {
 
   MemoModel({required this.uuid, required this.title, required this.text});
 
-  Map<String, Object?> toMap(){
+  Map<String, Object?> toMap() {
     final nowTime = DateTime.now().toIso8601String();
     var map = <String, Object?>{
       'id': uuid,
@@ -101,9 +101,9 @@ class AnimatedListItemWidget extends StatelessWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final key = GlobalKey<AnimatedListState>();
   var _lists = [
-    AnimatedListItem("項目1"),
-    AnimatedListItem("項目2"),
-    AnimatedListItem("項目3"),
+    //AnimatedListItem("項目1"),
+    //AnimatedListItem("項目2"),
+    //AnimatedListItem("項目3"),
   ];
 
   Widget buildAnimatedListItem(item, int index, Animation<double> animation) {
@@ -145,43 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
           )
         ],
       ),
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            ListTile(
-              title: Text('項目1'),
-              onTap: () {},
-            ),
-            ListTile(
-              title: Text('項目2'),
-              onTap: () {},
-            ),
-            ListTile(
-              title: Text('db insert'),
-              onTap: () async {
-                var uuidObj = new Uuid();
-                var uuid = uuidObj.v4();
-                var item = MemoModel(uuid: uuid, title: "タイトル", text: "テキスト");
-                var result = await DatabaseHelper.instance.insert(item);
-                print('inserted, uuid=${result.uuid}');
-              },
-            ),
-            ListTile(
-              title: Text('db件数表示'),
-              onTap: () async {
-                var count = await DatabaseHelper.instance.getCount('memos');
-                print('memos: $count件');
-              },
-            ),
-            ListTile(
-              title: Text('db削除'),
-              onTap: () async {
-                await DatabaseHelper.debugDelete();
-              },
-            )
-          ],
-        ),
-      ),
+      drawer: MyDrawer(),
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -212,4 +176,45 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+}
+
+class MyDrawer extends Drawer {
+  MyDrawer()
+      : super(
+          child: ListView(
+            children: [
+              ListTile(
+                title: Text('項目1'),
+                onTap: () {},
+              ),
+              ListTile(
+                title: Text('項目2'),
+                onTap: () {},
+              ),
+              ListTile(
+                title: Text('db insert'),
+                onTap: () async {
+                  var uuidObj = new Uuid();
+                  var uuid = uuidObj.v4();
+                  var item = MemoModel(uuid: uuid, title: "タイトル", text: "テキスト");
+                  var result = await DatabaseHelper.instance.insert(item);
+                  print('inserted, uuid=${result.uuid}');
+                },
+              ),
+              ListTile(
+                title: Text('db件数表示'),
+                onTap: () async {
+                  var count = await DatabaseHelper.instance.getCount('memos');
+                  print('memos: $count件');
+                },
+              ),
+              ListTile(
+                title: Text('db削除'),
+                onTap: () async {
+                  await DatabaseHelper.debugDelete();
+                },
+              )
+            ],
+          ),
+        );
 }
