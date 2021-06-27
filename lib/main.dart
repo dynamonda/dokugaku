@@ -2,10 +2,13 @@ import 'package:dokugaku/database_helper.dart';
 import 'package:dokugaku/edit_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:uuid/uuid.dart';
 
 void main() async {
   runApp(MyApp());
+
+  DatabaseHelper.instance.close();
 }
 
 class MyApp extends StatelessWidget {
@@ -42,6 +45,18 @@ class MemoModel {
   final String text;
 
   MemoModel({required this.uuid, required this.title, required this.text});
+
+  Map<String, Object?> toMap(){
+    final nowTime = DateTime.now().toIso8601String();
+    var map = <String, Object?>{
+      'id': uuid,
+      'created_at': nowTime,
+      'updated_at': nowTime,
+      'title': title,
+      'text': text
+    };
+    return map;
+  }
 }
 
 class AnimatedListItemWidget extends StatelessWidget {
@@ -140,6 +155,29 @@ class _MyHomePageState extends State<MyHomePage> {
             ListTile(
               title: Text('項目2'),
               onTap: () {},
+            ),
+            ListTile(
+              title: Text('db insert'),
+              onTap: () async {
+                var uuidObj = new Uuid();
+                var uuid = uuidObj.v4();
+                var item = MemoModel(uuid: uuid, title: "タイトル", text: "テキスト");
+                var result = await DatabaseHelper.instance.insert(item);
+                print('inserted, uuid=${result.uuid}');
+              },
+            ),
+            ListTile(
+              title: Text('db件数表示'),
+              onTap: () async {
+                var count = await DatabaseHelper.instance.getCount('memos');
+                print('memos: $count件');
+              },
+            ),
+            ListTile(
+              title: Text('db削除'),
+              onTap: () async {
+                await DatabaseHelper.debugDelete();
+              },
             )
           ],
         ),
