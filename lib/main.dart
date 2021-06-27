@@ -1,11 +1,10 @@
+import 'package:dokugaku/database_helper.dart';
 import 'package:dokugaku/edit_widget.dart';
-import 'package:dokugaku/listItem.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:uuid/uuid.dart';
 
-void main() {
+void main() async {
   runApp(MyApp());
 }
 
@@ -26,6 +25,7 @@ class MyHomePage extends StatefulWidget {
   MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
+  final dbHelper = DatabaseHelper.instance;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -34,6 +34,14 @@ class MyHomePage extends StatefulWidget {
 class AnimatedListItem {
   String name;
   AnimatedListItem(this.name);
+}
+
+class MemoModel {
+  final String uuid;
+  final String title;
+  final String text;
+
+  MemoModel({required this.uuid, required this.title, required this.text});
 }
 
 class AnimatedListItemWidget extends StatelessWidget {
@@ -76,32 +84,12 @@ class AnimatedListItemWidget extends StatelessWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<ListItem> _listItems = [
-    ListItem('フォルダ1', Icons.folder),
-    ListItem('メモ1', Icons.note),
-    ListItem('メモ2', Icons.text_snippet),
-  ];
-
-  // アニメーションリスト用
   final key = GlobalKey<AnimatedListState>();
   var _lists = [
     AnimatedListItem("項目1"),
     AnimatedListItem("項目2"),
     AnimatedListItem("項目3"),
   ];
-
-  void _addItemList() {
-    setState(() {
-      _listItems.add(ListItem("メモ${_listItems.length}", Icons.text_snippet));
-      print('AddListItem');
-    });
-  }
-
-  void _removeItemList(ListItem item) {
-    setState(() {
-      _listItems.remove(item);
-    });
-  }
 
   Widget buildAnimatedListItem(item, int index, Animation<double> animation) {
     // uuidを求める
@@ -184,14 +172,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            _removeItemList(_listItems.last);
-          });
-        },
-        child: Icon(Icons.call),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
