@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class EditWidget extends StatelessWidget {
   final String _uuid;
-  final AnimatedListItem _item;
+  final MemoListItem _item;
 
   EditWidget(this._uuid, this._item);
 
@@ -32,7 +32,7 @@ class EditWidget extends StatelessWidget {
 
 // タイトル
 class _TitleText extends Container {
-  _TitleText(AnimatedListItem item)
+  _TitleText(MemoListItem item)
       : super(
             width: double.infinity,
             padding: EdgeInsets.all(10.0),

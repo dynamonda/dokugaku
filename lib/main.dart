@@ -34,9 +34,9 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class AnimatedListItem {
+class MemoListItem {
   String name;
-  AnimatedListItem(this.name);
+  MemoListItem(this.name);
 }
 
 class MemoModel {
@@ -58,19 +58,19 @@ class MemoModel {
     return map;
   }
 
-  MemoModel.fromMap(Map<String, Object?> map){
+  MemoModel.fromMap(Map<String, Object?> map) {
     uuid = map['id'].toString();
     title = map['title'].toString();
     text = map['text'].toString();
   }
 
-  String toString(){
+  String toString() {
     return "MemoModel, id=$uuid, title=$title, text=$text";
   }
 }
 
 class AnimatedListItemWidget extends StatelessWidget {
-  final AnimatedListItem item;
+  final MemoListItem item;
   final Animation<double> animation;
   final VoidCallback onClicked;
   final String uuid;
@@ -110,7 +110,7 @@ class AnimatedListItemWidget extends StatelessWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final key = GlobalKey<AnimatedListState>();
-  var _lists = [
+  List<MemoListItem> _lists = [
     //AnimatedListItem("項目1"),
     //AnimatedListItem("項目2"),
     //AnimatedListItem("項目3"),
@@ -149,7 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
               //_addItemList();
               var index = _lists.length;
 
-              _lists.insert(index, AnimatedListItem("項目${_lists.length + 1}"));
+              _lists.insert(index, MemoListItem("項目${_lists.length + 1}"));
               key.currentState!.insertItem(index);
             },
           )
@@ -171,29 +171,40 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             Flexible(
-              child: AnimatedList(
-                key: key,
-                initialItemCount: _lists.length,
-                itemBuilder: (context, index, animation) {
-                  var item = _lists[index];
-                  return buildAnimatedListItem(item, index, animation);
-                },
-              ),
+              child: FutureBuilder(
+                  future: DatabaseHelper.instance.getMemos(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<MemoModel>> snapshot) {
+                    if (snapshot.connectionState != ConnectionState.done) {
+                      return CircularProgressIndicator();
+                    } else {
+                      var memoList = snapshot.data!;
+                      return AnimatedList(
+                        key: key,
+                        initialItemCount: memoList.length,
+                        itemBuilder: (context, index, animation) {
+                          var memo = memoList[index];
+                          var item = MemoListItem(memo.title);
+                          print(memo.title);
+                          return buildAnimatedListItem(item, index, animation);
+                        },
+                      );
+                    }
+                  }),
             ),
             Padding(
               padding: const EdgeInsets.all(10),
               child: FutureBuilder(
                 future: DatabaseHelper.instance.getMemos(),
-                builder: (BuildContext context, AsyncSnapshot<List<MemoModel>> snapshot){
-                  if(snapshot.hasData){
-                    if(snapshot.data == null) {
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<MemoModel>> snapshot) {
+                  if (snapshot.hasData) {
+                    if (snapshot.data == null) {
                       return Text('0件です');
-                    }
-                    else{
+                    } else {
                       return Text(snapshot.data!.length.toString());
                     }
-                  }
-                  else{
+                  } else {
                     return Text('ここに表示');
                   }
                 },
