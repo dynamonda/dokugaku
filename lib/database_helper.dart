@@ -78,6 +78,16 @@ class DatabaseHelper {
     return count;
   }
 
+  Future<int> update(MemoModel memo) async {
+    Database db = await instance.database;
+    final nowTime = DateTime.now().toIso8601String();
+    var count = await db.rawUpdate(
+        'UPDATE memos SET updated_at = ?, title = ?, text = ? WHERE id = ?',
+        [nowTime, memo.title, memo.text, memo.uuid]);
+    assert(count == 1);
+    return count;
+  }
+
   Future<int> getCount(String table) async {
     Database db = await instance.database;
     print('count table=$table');

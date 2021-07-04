@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 class EditWidget extends StatelessWidget {
   final String _uuid;
   final MemoListItem _item;
+  final _EditInfo _editInfo = new _EditInfo();
 
   EditWidget(this._uuid, this._item);
 
@@ -15,15 +16,17 @@ class EditWidget extends StatelessWidget {
         leading: new IconButton(
             icon: Icon(Icons.arrow_left),
             onPressed: () {
-              Navigator.pop(context, _item);
+              MemoListItem? item = _item;
+              if (_editInfo.isChanged == false) item = null;
+              Navigator.pop(context, item);
             }),
         title: new Text(this._uuid),
       ),
       body: SafeArea(
           child: Column(
         children: [
-          _TitleText(_item),
-          _TextArea(_item),
+          _TitleText(_item, _editInfo),
+          _TextArea(_item, _editInfo),
         ],
       )),
     );
@@ -32,7 +35,7 @@ class EditWidget extends StatelessWidget {
 
 // タイトル
 class _TitleText extends Container {
-  _TitleText(MemoListItem item)
+  _TitleText(MemoListItem item, _EditInfo editInfo)
       : super(
             width: double.infinity,
             padding: EdgeInsets.all(10.0),
@@ -46,6 +49,7 @@ class _TitleText extends Container {
               ),
               decoration: InputDecoration(border: InputBorder.none),
               onChanged: (text) {
+                editInfo.isChanged = true;
                 item.memo.title = text;
               },
             ));
@@ -53,7 +57,7 @@ class _TitleText extends Container {
 
 // テキストエリア
 class _TextArea extends Expanded {
-  _TextArea(MemoListItem item)
+  _TextArea(MemoListItem item, _EditInfo editInfo)
       : super(
           child: Container(
             //color: Colors.teal,
@@ -67,9 +71,15 @@ class _TextArea extends Expanded {
                   // 色々変更
                   ),
               onChanged: (text) {
+                editInfo.isChanged = true;
                 item.memo.text = text;
               },
             ),
           ),
         );
+}
+
+// 情報用
+class _EditInfo {
+  bool isChanged = false;
 }
