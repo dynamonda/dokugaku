@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class Dialog {
+class DialogUtil {
   // メッセージダイアログを表示する
   static messageDialog(BuildContext context, String title, String message) {
     showDialog(

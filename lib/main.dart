@@ -1,4 +1,5 @@
 import 'package:dokugaku/database_helper.dart';
+import 'package:dokugaku/dialog.dart';
 import 'package:dokugaku/edit_widget.dart';
 import 'package:dokugaku/util.dart';
 import 'package:flutter/cupertino.dart';
@@ -173,7 +174,7 @@ class _MyHomePageState extends State<MyHomePage> {
               // DBにインサートしてから、リストを更新
               var memo = MemoModel(
                   uuid: Util.uuid.v4(),
-                  title: "項目${_lists.length + 1}",
+                  title: "新しいメモ",
                   text: "");
               var memoItem = MemoListItem(memo);
 
@@ -189,7 +190,7 @@ class _MyHomePageState extends State<MyHomePage> {
           )
         ],
       ),
-      drawer: MyDrawer(),
+      drawer: MyDrawer(context),
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -257,36 +258,22 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class MyDrawer extends Drawer {
-  MyDrawer()
+  MyDrawer(BuildContext context)
       : super(
           child: ListView(
             children: [
               ListTile(
-                title: Text('項目1'),
-                onTap: () {},
-              ),
-              ListTile(
-                title: Text('項目2'),
-                onTap: () {},
-              ),
-              ListTile(
-                title: Text('db insert'),
-                onTap: () async {
-                  var item = MemoModel(
-                      uuid: Util.uuid.v4(), title: "タイトル", text: "テキスト");
-                  var result = await DatabaseHelper.instance.insert(item);
-                },
-              ),
-              ListTile(
                 title: Text('db件数表示'),
                 onTap: () async {
                   var count = await DatabaseHelper.instance.getCount('memos');
+                  DialogUtil.messageDialogMessage(context, "memos 全$count件");
                 },
               ),
               ListTile(
                 title: Text('db削除'),
                 onTap: () async {
                   await DatabaseHelper.debugDelete();
+                  DialogUtil.messageDialogMessage(context, "memos テーブルを削除しました");
                 },
               )
             ],
