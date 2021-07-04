@@ -36,7 +36,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class MemoListItem {
-  MemoModel memo;
+  final MemoModel memo;
 
   MemoListItem(this.memo);
 }
@@ -118,18 +118,23 @@ class _MyHomePageState extends State<MyHomePage> {
     //AnimatedListItem("項目3"),
   ];
 
-  Widget buildAnimatedListItem(item, int index, Animation<double> animation) {
+  Widget buildAnimatedListItem(
+      MemoListItem item, int index, Animation<double> animation) {
     return AnimatedListItemWidget(
       item: item,
       animation: animation,
-      onClicked: () {
-        // 元のリストから削除
-        final item = _lists.removeAt(index);
+      onClicked: () async {
+        // DBから削除する
+        var count = await DatabaseHelper.instance.delete(item.memo);
+        if (count > 0) {
+          // 元のリストから削除
+          final removedItem = _lists.removeAt(index);
 
-        // アニメーションリストから削除
-        key.currentState!.removeItem(index, (context, animation) {
-          return buildAnimatedListItem(item, index, animation);
-        });
+          // アニメーションリストから削除
+          key.currentState!.removeItem(index, (context, animation) {
+            return buildAnimatedListItem(removedItem, index, animation);
+          });
+        }
       },
       uuid: Util.uuid.v4(),
     );
@@ -148,14 +153,13 @@ class _MyHomePageState extends State<MyHomePage> {
               var memo = MemoModel(
                   uuid: Util.uuid.v4(),
                   title: "項目${_lists.length + 1}",
-                  text: ""
-              );
+                  text: "");
               var memoItem = MemoListItem(memo);
 
               var insertResult = await DatabaseHelper.instance.insert(memo);
 
               // 成功したらリスト更新
-              if(insertResult > 0) {
+              if (insertResult > 0) {
                 var index = _lists.length;
                 _lists.insert(index, memoItem);
                 key.currentState!.insertItem(index);
@@ -190,7 +194,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       // DBから取り出してリストに入れてしまう
                       _lists.clear();
                       var memoList = snapshot.data!;
-                      memoList.asMap().forEach((int i, MemoModel memo){
+                      memoList.asMap().forEach((int i, MemoModel memo) {
                         var item = MemoListItem(memo);
                         _lists.add(item);
                       });
@@ -248,9 +252,7 @@ class MyDrawer extends Drawer {
                 title: Text('db insert'),
                 onTap: () async {
                   var item = MemoModel(
-                      uuid: Util.uuid.v4(),
-                      title: "タイトル",
-                      text: "テキスト");
+                      uuid: Util.uuid.v4(), title: "タイトル", text: "テキスト");
                   var result = await DatabaseHelper.instance.insert(item);
                   print('inserted, resultValue=$result');
                 },

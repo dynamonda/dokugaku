@@ -16,11 +16,9 @@ class DatabaseHelper {
   static Database? _database;
   Future<Database> get database async {
     if (_database != null) {
-      print('_database is not null');
       return _database!;
     }
 
-    print('_database is NULL');
     _database = await _initDatabase();
     return _database!;
   }
@@ -50,7 +48,7 @@ class DatabaseHelper {
     ''');
   }
 
-  close(){
+  close() {
     _database?.close();
   }
 
@@ -72,7 +70,15 @@ class DatabaseHelper {
     return id;
   }
 
-  Future<int> getCount(String table) async{
+  Future<int> delete(MemoModel memo) async {
+    Database db = await instance.database;
+    var count =
+        await db.rawDelete('DELETE FROM memos WHERE id = ?', [memo.uuid]);
+    assert(count == 1);
+    return count;
+  }
+
+  Future<int> getCount(String table) async {
     Database db = await instance.database;
     print('count table=$table');
     var result = await db.rawQuery('SELECT COUNT(*) FROM $table');
@@ -80,7 +86,7 @@ class DatabaseHelper {
     return count!;
   }
 
-  Future<List<MemoModel>> getMemos() async{
+  Future<List<MemoModel>> getMemos() async {
     var db = await instance.database;
     List<Map<String, Object?>> result = await db.query('memos');
 
