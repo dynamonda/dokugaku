@@ -1,5 +1,6 @@
 import 'package:dokugaku/database_helper.dart';
 import 'package:dokugaku/edit_widget.dart';
+import 'package:dokugaku/util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
@@ -35,8 +36,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class MemoListItem {
-  String name;
-  MemoListItem(this.name);
+  MemoModel memo;
+
+  MemoListItem(this.memo);
 }
 
 class MemoModel {
@@ -90,7 +92,7 @@ class AnimatedListItemWidget extends StatelessWidget {
       sizeFactor: animation,
       child: ListTile(
         leading: Icon(Icons.text_snippet),
-        title: Text(item.name),
+        title: Text(item.memo.title),
         trailing: IconButton(
           icon: Icon(Icons.delete),
           onPressed: () {
@@ -117,10 +119,6 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
 
   Widget buildAnimatedListItem(item, int index, Animation<double> animation) {
-    // uuidを求める
-    var uuidObj = new Uuid();
-    var uuid = uuidObj.v4();
-
     return AnimatedListItemWidget(
       item: item,
       animation: animation,
@@ -133,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
           return buildAnimatedListItem(item, index, animation);
         });
       },
-      uuid: uuid,
+      uuid: Util.uuid.v4(),
     );
   }
 
@@ -146,10 +144,17 @@ class _MyHomePageState extends State<MyHomePage> {
           IconButton(
             icon: Icon(Icons.add),
             onPressed: () {
-              //_addItemList();
-              var index = _lists.length;
+              // DBにインサートしてから、リストを更新
+              var memo = MemoModel(
+                  uuid: Util.uuid.v4(),
+                  title: "項目${_lists.length + 1}",
+                  text: ""
+              );
+              var memoItem = MemoListItem(memo);
+              //DatabaseHelper.instance.insert(memo);
 
-              _lists.insert(index, MemoListItem("項目${_lists.length + 1}"));
+              var index = _lists.length;
+              _lists.insert(index, memoItem);
               key.currentState!.insertItem(index);
             },
           )
@@ -178,14 +183,19 @@ class _MyHomePageState extends State<MyHomePage> {
                     if (snapshot.connectionState != ConnectionState.done) {
                       return CircularProgressIndicator();
                     } else {
+                      // DBから取り出してリストに入れてしまう
+                      _lists.clear();
                       var memoList = snapshot.data!;
+                      memoList.asMap().forEach((int i, MemoModel memo){
+                        var item = MemoListItem(memo);
+                        _lists.add(item);
+                      });
+
                       return AnimatedList(
                         key: key,
                         initialItemCount: memoList.length,
                         itemBuilder: (context, index, animation) {
-                          var memo = memoList[index];
-                          var item = MemoListItem(memo.title);
-                          print(memo.title);
+                          var item = _lists[index];
                           return buildAnimatedListItem(item, index, animation);
                         },
                       );

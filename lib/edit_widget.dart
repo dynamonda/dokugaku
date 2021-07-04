@@ -39,14 +39,14 @@ class _TitleText extends Container {
             child: TextField(
               maxLines: 1,
               minLines: 1,
-              controller: TextEditingController(text: item.name),
+              controller: TextEditingController(text: item.memo.title),
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
               decoration: InputDecoration(border: InputBorder.none),
               onChanged: (text) {
-                item.name = text;
+                item.memo.title = text;
               },
             ));
 }
