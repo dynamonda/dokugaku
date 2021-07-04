@@ -143,7 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: [
           IconButton(
             icon: Icon(Icons.add),
-            onPressed: () {
+            onPressed: () async {
               // DBにインサートしてから、リストを更新
               var memo = MemoModel(
                   uuid: Util.uuid.v4(),
@@ -151,11 +151,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   text: ""
               );
               var memoItem = MemoListItem(memo);
-              //DatabaseHelper.instance.insert(memo);
 
-              var index = _lists.length;
-              _lists.insert(index, memoItem);
-              key.currentState!.insertItem(index);
+              var insertResult = await DatabaseHelper.instance.insert(memo);
+
+              // 成功したらリスト更新
+              if(insertResult > 0) {
+                var index = _lists.length;
+                _lists.insert(index, memoItem);
+                key.currentState!.insertItem(index);
+              }
             },
           )
         ],
@@ -243,11 +247,12 @@ class MyDrawer extends Drawer {
               ListTile(
                 title: Text('db insert'),
                 onTap: () async {
-                  var uuidObj = new Uuid();
-                  var uuid = uuidObj.v4();
-                  var item = MemoModel(uuid: uuid, title: "タイトル", text: "テキスト");
+                  var item = MemoModel(
+                      uuid: Util.uuid.v4(),
+                      title: "タイトル",
+                      text: "テキスト");
                   var result = await DatabaseHelper.instance.insert(item);
-                  print('inserted, uuid=${result.uuid}');
+                  print('inserted, resultValue=$result');
                 },
               ),
               ListTile(

@@ -66,10 +66,10 @@ class DatabaseHelper {
 
   // ====== ヘルパーメソッド ======
 
-  Future<MemoModel> insert(MemoModel memo) async {
+  Future<int> insert(MemoModel memo) async {
     Database db = await instance.database;
     var id = await db.insert("memos", memo.toMap());
-    return memo;
+    return id;
   }
 
   Future<int> getCount(String table) async{
