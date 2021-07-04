@@ -100,10 +100,13 @@ class AnimatedListItemWidget extends StatelessWidget {
           },
         ),
         onTap: () async {
-          final result = await Navigator.push(
+          // エディット画面に遷移
+          MemoListItem result = await Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => EditWidget(this.uuid, item)));
+          print('title=${result.memo.title}');
+          print('text =${result.memo.text}');
         },
       ),
     );

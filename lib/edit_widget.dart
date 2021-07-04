@@ -15,7 +15,7 @@ class EditWidget extends StatelessWidget {
         leading: new IconButton(
             icon: Icon(Icons.arrow_left),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pop(context, _item);
             }),
         title: new Text(this._uuid),
       ),
@@ -23,7 +23,7 @@ class EditWidget extends StatelessWidget {
           child: Column(
         children: [
           _TitleText(_item),
-          _TextArea(),
+          _TextArea(_item),
         ],
       )),
     );
@@ -53,7 +53,7 @@ class _TitleText extends Container {
 
 // テキストエリア
 class _TextArea extends Expanded {
-  _TextArea()
+  _TextArea(MemoListItem item)
       : super(
           child: Container(
             //color: Colors.teal,
@@ -62,9 +62,13 @@ class _TextArea extends Expanded {
             child: TextField(
               enabled: true,
               maxLines: null,
+              controller: TextEditingController(text: item.memo.text),
               decoration: new InputDecoration(
                   // 色々変更
                   ),
+              onChanged: (text) {
+                item.memo.text = text;
+              },
             ),
           ),
         );
