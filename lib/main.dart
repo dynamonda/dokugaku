@@ -1,9 +1,11 @@
 import 'package:dokugaku/database_helper.dart';
 import 'package:dokugaku/dialog.dart';
 import 'package:dokugaku/edit_widget.dart';
+import 'package:dokugaku/main_model.dart';
 import 'package:dokugaku/util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:uuid/uuid.dart';
 
@@ -164,93 +166,90 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () async {
-              // DBにインサートしてから、リストを更新
-              var memo = MemoModel(
-                  uuid: Util.uuid.v4(),
-                  title: "新しいメモ",
-                  text: "");
-              var memoItem = MemoListItem(memo);
+    return ChangeNotifierProvider<MainModel>(
+      create: (_) => MainModel(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () async {
+                // DBにインサートしてから、リストを更新
+                var memo =
+                    MemoModel(uuid: Util.uuid.v4(), title: "新しいメモ", text: "");
+                var memoItem = MemoListItem(memo);
 
-              var insertResult = await DatabaseHelper.instance.insert(memo);
+                var insertResult = await DatabaseHelper.instance.insert(memo);
 
-              // 成功したらリスト更新
-              if (insertResult > 0) {
-                var index = _lists.length;
-                _lists.insert(index, memoItem);
-                key.currentState!.insertItem(index);
-              }
-            },
-          )
-        ],
-      ),
-      drawer: MyDrawer(context),
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Container(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  'メモ',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-            Flexible(
-              child: FutureBuilder(
-                  future: DatabaseHelper.instance.getMemos(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<MemoModel>> snapshot) {
-                    if (snapshot.connectionState != ConnectionState.done) {
-                      return CircularProgressIndicator();
-                    } else {
-                      // DBから取り出してリストに入れてしまう
-                      _lists.clear();
-                      var memoList = snapshot.data!;
-                      memoList.asMap().forEach((int i, MemoModel memo) {
-                        var item = MemoListItem(memo);
-                        _lists.add(item);
-                      });
-
-                      return AnimatedList(
-                        key: key,
-                        initialItemCount: memoList.length,
-                        itemBuilder: (context, index, animation) {
-                          var item = _lists[index];
-                          return buildAnimatedListItem(item, index, animation);
-                        },
-                      );
-                    }
-                  }),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: FutureBuilder(
-                future: DatabaseHelper.instance.getMemos(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<List<MemoModel>> snapshot) {
-                  if (snapshot.hasData) {
-                    if (snapshot.data == null) {
-                      return Text('0件です');
-                    } else {
-                      return Text(snapshot.data!.length.toString());
-                    }
-                  } else {
-                    return Text('ここに表示');
-                  }
-                },
-              ),
+                // 成功したらリスト更新
+                if (insertResult > 0) {
+                  var index = _lists.length;
+                  _lists.insert(index, memoItem);
+                  key.currentState!.insertItem(index);
+                }
+              },
             )
           ],
+        ),
+        drawer: MyDrawer(context),
+        body: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Container(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    'メモ',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              Flexible(
+                child: FutureBuilder(
+                    future: DatabaseHelper.instance.getMemos(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<MemoModel>> snapshot) {
+                      if (snapshot.connectionState != ConnectionState.done) {
+                        return CircularProgressIndicator();
+                      } else {
+                        // DBから取り出してリストに入れてしまう
+                        _lists.clear();
+                        var memoList = snapshot.data!;
+                        memoList.asMap().forEach((int i, MemoModel memo) {
+                          var item = MemoListItem(memo);
+                          _lists.add(item);
+                        });
+
+                        return AnimatedList(
+                          key: key,
+                          initialItemCount: memoList.length,
+                          itemBuilder: (context, index, animation) {
+                            var item = _lists[index];
+                            return buildAnimatedListItem(
+                                item, index, animation);
+                          },
+                        );
+                      }
+                    }),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Consumer<MainModel>(builder: (context, model, child) {
+                  return Row(
+                    children: [
+                      Text(model.fooText),
+                      ElevatedButton(onPressed: () {
+                        model.changeText();
+                      }, child: Text('変更'))
+                    ],
+                  );
+                }),
+              )
+            ],
+          ),
         ),
       ),
     );
