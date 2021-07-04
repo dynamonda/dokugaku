@@ -46,6 +46,9 @@ class MemoModel {
   late String title;
   late String text;
 
+  DateTime createdDateTime = DateTime.now();
+  DateTime updatedDateTime = DateTime.now();
+
   MemoModel({required this.uuid, required this.title, required this.text});
 
   Map<String, Object?> toMap() {
@@ -64,6 +67,9 @@ class MemoModel {
     uuid = map['id'].toString();
     title = map['title'].toString();
     text = map['text'].toString();
+
+    createdDateTime = DateTime.parse(map['created_at'].toString());
+    updatedDateTime = DateTime.parse(map['updated_at'].toString());
   }
 
   String toString() {
