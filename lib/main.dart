@@ -82,6 +82,7 @@ class AnimatedListItemWidget extends StatelessWidget {
   final Animation<double> animation;
   final VoidCallback onClicked;
   final String uuid;
+  final VoidCallback? onUpdated;
 
   const AnimatedListItemWidget({
     required this.item,
@@ -89,6 +90,7 @@ class AnimatedListItemWidget extends StatelessWidget {
     required this.onClicked,
     required this.uuid,
     Key? key,
+    this.onUpdated,
   }) : super(key: key);
 
   // ここでリストの見た目を作る
@@ -115,7 +117,7 @@ class AnimatedListItemWidget extends StatelessWidget {
           if (result != null) {
             // DBを更新
             await DatabaseHelper.instance.update(result.memo);
-            print('更新しました。');
+            onUpdated?.call();
           } else {
             print('変更がないので、更新しません。');
           }
@@ -152,6 +154,10 @@ class _MyHomePageState extends State<MyHomePage> {
         }
       },
       uuid: Util.uuid.v4(),
+      onUpdated: () {
+        print('更新しました。');
+        setState(() {});
+      },
     );
   }
 
@@ -269,14 +275,12 @@ class MyDrawer extends Drawer {
                   var item = MemoModel(
                       uuid: Util.uuid.v4(), title: "タイトル", text: "テキスト");
                   var result = await DatabaseHelper.instance.insert(item);
-                  print('inserted, resultValue=$result');
                 },
               ),
               ListTile(
                 title: Text('db件数表示'),
                 onTap: () async {
                   var count = await DatabaseHelper.instance.getCount('memos');
-                  print('memos: $count件');
                 },
               ),
               ListTile(

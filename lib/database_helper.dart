@@ -98,12 +98,12 @@ class DatabaseHelper {
 
   Future<List<MemoModel>> getMemos() async {
     var db = await instance.database;
-    List<Map<String, Object?>> result = await db.query('memos');
+    List<Map<String, Object?>> result =
+        await db.query('memos', orderBy: 'updated_at DESC');
 
     List<MemoModel> list = [];
     result.forEach((row) {
       list.add(MemoModel.fromMap(row));
-      print(row.toString());
     });
 
     return list;
