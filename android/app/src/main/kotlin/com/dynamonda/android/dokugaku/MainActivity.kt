@@ -1,4 +1,4 @@
-package com.example.dokugaku
+package com.dynamonda.android.dokugaku
 
 import io.flutter.embedding.android.FlutterActivity
 
