@@ -2,7 +2,9 @@ import 'package:dokugaku/database_helper.dart';
 import 'package:dokugaku/dialog.dart';
 import 'package:dokugaku/edit_widget.dart';
 import 'package:dokugaku/main_model.dart';
+import 'package:dokugaku/prototype/booklist.dart';
 import 'package:dokugaku/util.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +12,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:uuid/uuid.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 
   DatabaseHelper.instance.close();
@@ -241,9 +245,19 @@ class _MyHomePageState extends State<MyHomePage> {
                   return Row(
                     children: [
                       Text(model.fooText),
-                      ElevatedButton(onPressed: () {
-                        model.changeText();
-                      }, child: Text('変更'))
+                      ElevatedButton(
+                          onPressed: () {
+                            model.changeText();
+                          },
+                          child: Text('変更')),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => BookList()));
+                          },
+                          child: Text('Firebase'))
                     ],
                   );
                 }),
