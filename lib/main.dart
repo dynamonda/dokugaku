@@ -255,7 +255,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => BookList()));
+                                    builder: (context) => BookListPage()));
                           },
                           child: Text('Firebase'))
                     ],
