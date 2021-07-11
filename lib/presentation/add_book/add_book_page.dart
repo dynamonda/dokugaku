@@ -34,7 +34,7 @@ class AddBookPage extends StatelessWidget {
                       // firestoreに本を追加
                       try {
                         await model.addBook();
-                        showDialog(
+                        await showDialog(
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
@@ -50,6 +50,7 @@ class AddBookPage extends StatelessWidget {
                                 ],
                               );
                             });
+                        Navigator.of(context).pop();
                       } catch (e) {
                         showDialog(
                             context: context,
