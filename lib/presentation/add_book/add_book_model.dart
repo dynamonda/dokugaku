@@ -3,14 +3,16 @@ import 'package:dokugaku/domain/book.dart';
 import 'package:flutter/cupertino.dart';
 
 class AddBookModel extends ChangeNotifier {
-  List<Book> books = [];
+  String bookTitle = '';
+  String bookAuthor = '';
 
-  // Firebaseから取得してbooksに代入
-  Future fetchBooks() async {
-    final docs = await FirebaseFirestore.instance.collection('books').get();
-    final books =
-    docs.docs.map((doc) => Book(doc['title'], doc['author'])).toList();
-    this.books = books;
-    notifyListeners();
+  Future addBook() async {
+    if(bookTitle.isEmpty || bookAuthor.isEmpty){
+      throw('タイトルと作者名を追加してください');
+    }
+
+    await FirebaseFirestore.instance
+        .collection('books')
+        .add({'title': bookTitle, 'author': bookAuthor});
   }
 }

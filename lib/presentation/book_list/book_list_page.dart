@@ -28,8 +28,11 @@ class BookListPage extends StatelessWidget {
           child: Icon(Icons.add),
           onPressed: () async {
             // 本を追加に遷移
-            await Navigator.push(context,
-                MaterialPageRoute(builder: (context) => AddBookPage()));
+            await Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => AddBookPage(),
+                    fullscreenDialog: true));
           },
         ),
       ),

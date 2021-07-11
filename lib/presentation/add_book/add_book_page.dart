@@ -1,6 +1,7 @@
 import 'package:dokugaku/presentation/add_book/add_book_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class AddBookPage extends StatelessWidget {
@@ -13,7 +14,27 @@ class AddBookPage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(title: Text('本を追加')),
         body: Consumer<AddBookModel>(builder: (context, model, child) {
-          return Container();
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                TextField(
+                  onChanged: (text){
+                    model.bookTitle = text;
+                  },
+                ),
+                TextField(
+                  onChanged: (text){
+                    model.bookAuthor = text;
+                  },
+                ),
+                ElevatedButton(child: Text("追加"), onPressed: () async {
+                  // firestoreに本を追加
+                  await model.addBook();
+                })
+              ],
+            ),
+          );
         }),
       ),
     );
