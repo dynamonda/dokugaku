@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dokugaku/prototype_book_list/book.dart';
+import 'package:dokugaku/presentation/book_list/book.dart';
 import 'package:flutter/cupertino.dart';
 
 class BookListModel extends ChangeNotifier {

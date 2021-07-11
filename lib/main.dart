@@ -1,9 +1,9 @@
 import 'package:dokugaku/database_helper.dart';
-import 'package:dokugaku/dialog.dart';
+import 'package:dokugaku/utility/dialog.dart';
 import 'package:dokugaku/edit_widget.dart';
 import 'package:dokugaku/main_model.dart';
-import 'package:dokugaku/prototype_book_list/book_list_page.dart';
-import 'package:dokugaku/util.dart';
+import 'package:dokugaku/presentation/book_list/book_list_page.dart';
+import 'package:dokugaku/utility/util.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
