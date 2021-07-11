@@ -7,12 +7,28 @@ class AddBookModel extends ChangeNotifier {
   String bookAuthor = '';
 
   Future addBook() async {
-    if(bookTitle.isEmpty || bookAuthor.isEmpty){
-      throw('タイトルと作者名を追加してください');
+    if (bookTitle.isEmpty || bookAuthor.isEmpty) {
+      throw ('タイトルと作者名を追加してください');
     }
 
-    await FirebaseFirestore.instance
-        .collection('books')
-        .add({'title': bookTitle, 'author': bookAuthor});
+    await FirebaseFirestore.instance.collection('books').add({
+      'title': bookTitle,
+      'author': bookAuthor,
+      'createdAt': Timestamp.now()
+    });
+  }
+
+  Future updateBook(Book book) async {
+    if (bookTitle.isEmpty || bookAuthor.isEmpty) {
+      throw ('タイトルと作者名を追加してください');
+    }
+
+    final document =
+        FirebaseFirestore.instance.collection('books').doc(book.documentID);
+    document.update({
+      'title': bookTitle,
+      'author': bookAuthor,
+      'updateAt': Timestamp.now(),
+    });
   }
 }
