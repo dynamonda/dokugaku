@@ -8,8 +8,9 @@ class BookListModel extends ChangeNotifier {
   // Firebaseから取得してbooksに代入
   Future fetchBooks() async {
     final docs = await FirebaseFirestore.instance.collection('books').get();
-    final books =
-        docs.docs.map((doc) => Book(doc['title'], doc['author'])).toList();
+    final books = docs.docs
+        .map((doc) => Book(doc.reference.id, doc['title'], doc['author']))
+        .toList();
     this.books = books;
     notifyListeners();
   }
