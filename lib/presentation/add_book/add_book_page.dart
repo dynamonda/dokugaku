@@ -19,19 +19,37 @@ class AddBookPage extends StatelessWidget {
             child: Column(
               children: [
                 TextField(
-                  onChanged: (text){
+                  onChanged: (text) {
                     model.bookTitle = text;
                   },
                 ),
                 TextField(
-                  onChanged: (text){
+                  onChanged: (text) {
                     model.bookAuthor = text;
                   },
                 ),
-                ElevatedButton(child: Text("追加"), onPressed: () async {
-                  // firestoreに本を追加
-                  await model.addBook();
-                })
+                ElevatedButton(
+                    child: Text("追加"),
+                    onPressed: () async {
+                      // firestoreに本を追加
+                      await model.addBook();
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('保存しました'),
+                              actions: [
+                                TextButton(
+                                  child: Text('OK'),
+                                  onPressed: () {
+                                    // なにこれ？
+                                    Navigator.of(context).pop();
+                                  },
+                                )
+                              ],
+                            );
+                          });
+                    })
               ],
             ),
           );
