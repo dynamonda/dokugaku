@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dokugaku/presentation/add_book/add_book_page.dart';
 import 'package:dokugaku/presentation/book_list/book_list_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,8 +26,10 @@ class BookListPage extends StatelessWidget {
         }),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
-          onPressed: () {
-            // Todo
+          onPressed: () async {
+            // 本を追加に遷移
+            await Navigator.push(context,
+                MaterialPageRoute(builder: (context) => AddBookPage()));
           },
         ),
       ),
