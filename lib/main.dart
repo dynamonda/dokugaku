@@ -1,4 +1,5 @@
 import 'package:dokugaku/database_helper.dart';
+import 'package:dokugaku/presentation/signup/signup_page.dart';
 import 'package:dokugaku/utility/dialog.dart';
 import 'package:dokugaku/edit_widget.dart';
 import 'package:dokugaku/main_model.dart';
@@ -244,12 +245,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Consumer<MainModel>(builder: (context, model, child) {
                   return Row(
                     children: [
+                      /*
                       Text(model.fooText),
                       ElevatedButton(
                           onPressed: () {
                             model.changeText();
                           },
                           child: Text('変更')),
+                       */
                       ElevatedButton(
                           onPressed: () {
                             Navigator.push(
@@ -257,7 +260,15 @@ class _MyHomePageState extends State<MyHomePage> {
                                 MaterialPageRoute(
                                     builder: (context) => BookListPage()));
                           },
-                          child: Text('Firebase'))
+                          child: Text('Firebase')),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SignupPage()));
+                          },
+                          child: Text('SignUp'))
                     ],
                   );
                 }),
