@@ -1,4 +1,5 @@
 import 'package:dokugaku/database_helper.dart';
+import 'package:dokugaku/presentation/login/login_page.dart';
 import 'package:dokugaku/presentation/signup/signup_page.dart';
 import 'package:dokugaku/utility/dialog.dart';
 import 'package:dokugaku/edit_widget.dart';
@@ -268,7 +269,15 @@ class _MyHomePageState extends State<MyHomePage> {
                                 MaterialPageRoute(
                                     builder: (context) => SignupPage()));
                           },
-                          child: Text('SignUp'))
+                          child: Text('SignUp')),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginPage()));
+                          },
+                          child: Text('LogIn'))
                     ],
                   );
                 }),
