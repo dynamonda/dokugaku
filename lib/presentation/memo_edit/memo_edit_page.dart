@@ -1,4 +1,4 @@
-import 'package:dokugaku/main.dart';
+import 'package:dokugaku/presentation/main/main_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
